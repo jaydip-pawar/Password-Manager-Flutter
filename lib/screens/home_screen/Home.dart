@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:secret_keeper/Database/Hive/BankModel.dart';
+import 'package:secret_keeper/Database/Hive/CardModel.dart';
+import 'package:secret_keeper/Database/Hive/NotesModel.dart';
+import 'package:secret_keeper/Database/Hive/PasswordModel.dart';
 import 'package:secret_keeper/screens/home_screen/banks/BanksNavigation.dart';
 import 'package:secret_keeper/screens/home_screen/cards/CardsNavigation.dart';
 import 'package:secret_keeper/screens/home_screen/notes/NotesNavigation.dart';
@@ -7,6 +13,8 @@ import 'package:secret_keeper/screens/input_screen/bank_input/BankInput.dart';
 import 'package:secret_keeper/screens/input_screen/card_input/CardInput.dart';
 import 'package:secret_keeper/screens/input_screen/note_input/NoteInput.dart';
 import 'package:secret_keeper/screens/input_screen/password_input/PasswordInput.dart';
+
+Box passwordBox, cardBox, bankBox, notesBox;
 
 class Home extends StatefulWidget {
   @override
@@ -23,6 +31,27 @@ class _HomeState extends State<Home> {
     BanksNavigation(),
     NotesNavigation(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Hive.registerAdapter(PasswordModelAdapter());
+    Hive.registerAdapter(CardModelAdapter());
+    Hive.registerAdapter(BankModelAdapter());
+    Hive.registerAdapter(NotesModelAdapter());
+    _openBox();
+  }
+
+  Future _openBox() async {
+    var dir = await getApplicationDocumentsDirectory();
+    Hive.init(dir.path);
+    passwordBox = await Hive.openBox<PasswordModel>('passwordBox');
+    cardBox = await Hive.openBox<CardModel>('cardBox');
+    bankBox = await Hive.openBox<BankModel>('bankBox');
+    notesBox = await Hive.openBox<NotesModel>('notesBox');
+    return;
+  }
 
   //Active Page (Tab)
 

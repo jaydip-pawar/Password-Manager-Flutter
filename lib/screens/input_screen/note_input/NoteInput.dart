@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/database/notes_model.dart';
-import 'package:secret_keeper/main.dart';
+import 'package:secret_keeper/Database/Hive/NotesModel.dart';
+import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class NoteInput extends StatefulWidget {
   @override
@@ -9,30 +8,8 @@ class NoteInput extends StatefulWidget {
 }
 
 class _NoteInputState extends State<NoteInput> {
-
-  //Reference of Box
-  // Box<NotesModel> noteBox;
-
   TextEditingController titleController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   noteBox = Hive.box<NotesModel>(NotesBoxName);
-  // }
-  //
-  // void addDataToHive(){
-  //   final String titleInput = titleController.text;
-  //   final String notesInput = notesController.text;
-  //
-  //   NotesModel notesModel = NotesModel(title: titleInput, note: notesInput);
-  //
-  //   noteBox.add(notesModel);
-  //
-  //   Navigator.pop(context);
-  // }
 
   Widget Title() {
     return TextFormField(
@@ -116,7 +93,9 @@ class _NoteInputState extends State<NoteInput> {
                   height: 50,
                   width: double.infinity,
                   child: FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      addDataToHive();
+                    },
                     padding: EdgeInsets.all(0),
                     child: Ink(
                       decoration: BoxDecoration(
@@ -157,5 +136,14 @@ class _NoteInputState extends State<NoteInput> {
         ),
       ),
     );
+  }
+
+  void addDataToHive() {
+    NotesModel notesModel = NotesModel(
+      title: titleController.text,
+      note: notesController.text
+    );
+    notesBox.add(notesModel);
+    Navigator.pop(context);
   }
 }

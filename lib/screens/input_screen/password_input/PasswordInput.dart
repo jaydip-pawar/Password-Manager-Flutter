@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/database/password_model.dart';
-import 'package:secret_keeper/main.dart';
+import 'package:secret_keeper/Database/Hive/PasswordModel.dart';
+import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class PasswordInput extends StatefulWidget {
   @override
@@ -11,9 +10,6 @@ class PasswordInput extends StatefulWidget {
 }
 
 class _PasswordInputState extends State<PasswordInput> {
-
-  //Reference of Box
-  Box<PasswordModel> passwordBox;
 
   bool _obscureText = true;
   int generatePasswordHelper = 0;
@@ -26,33 +22,10 @@ class _PasswordInputState extends State<PasswordInput> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController notesController = TextEditingController();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    passwordBox = Hive.box<PasswordModel>(PasswordBoxName);
-  }
-
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
-  }
-  
-  void addDataToHive(){
-    final String websiteNameInput = websiteNameController.text;
-    final String websiteAddressInput = websiteAddressController.text;
-    final String userNameInput = userNameController.text;
-    final String passwordInput = passwordController.text;
-    final String notesInput = notesController.text;
-    
-    PasswordModel passwordModel = PasswordModel(websiteName: websiteNameInput, websiteAddress: websiteAddressInput,
-    userName: userNameInput, password: passwordInput, notes: notesInput);
-
-    passwordBox.add(passwordModel);
-    print(passwordModel);
-
-    Navigator.pop(context);
   }
 
   Widget WebsiteName() {
@@ -352,5 +325,17 @@ class _PasswordInputState extends State<PasswordInput> {
         ),
       ),
     );
+  }
+
+  void addDataToHive() {
+    PasswordModel passwordModel = PasswordModel(
+      websiteName: websiteNameController.text,
+      websiteAddress: websiteAddressController.text,
+      userName: userNameController.text,
+      password: passwordController.text,
+      notes: notesController.text
+    );
+    passwordBox.add(passwordModel);
+    Navigator.pop(context);
   }
 }

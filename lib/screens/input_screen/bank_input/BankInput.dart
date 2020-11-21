@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/database/bank_model.dart';
-import 'package:secret_keeper/main.dart';
+import 'package:secret_keeper/Database/Hive/BankModel.dart';
+import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class BankInput extends StatefulWidget {
   @override
@@ -9,9 +8,6 @@ class BankInput extends StatefulWidget {
 }
 
 class _BankInputState extends State<BankInput> {
-
-  //Reference of Box
-  //Box<BankModel> bankBox;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
@@ -22,32 +18,6 @@ class _BankInputState extends State<BankInput> {
   TextEditingController branchAddressController = TextEditingController();
   TextEditingController bankNumberController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   bankBox = Hive.box<BankModel>(BankBoxName);
-  // }
-  //
-  // void addDataToHive(){
-  //   final String titleInput = titleController.text;
-  //   final String bankNameInput = bankNameController.text;
-  //   final String accountNumberInput = accountNumberController.text;
-  //   final String accountTypeInput = accountTypeController.text;
-  //   final String ifscInput = ifscController.text;
-  //   final String branchNameInput = branchNameController.text;
-  //   final String branchAddressInput = branchAddressController.text;
-  //   final String bankNumberInput = bankNumberController.text;
-  //   final String notesInput = notesController.text;
-  //
-  //   BankModel bankModel = BankModel(title: titleInput, bankName: bankNameInput, accountNumber: accountNumberInput, accountType: accountTypeInput,
-  //       ifsc: ifscInput, branchName: branchNameInput, branchAddress: branchAddressInput, bankNumber: bankNumberInput, note: notesInput);
-  //
-  //   bankBox.add(bankModel);
-  //
-  //   Navigator.pop(context);
-  // }
 
   Widget Title() {
     return TextFormField(
@@ -324,7 +294,9 @@ class _BankInputState extends State<BankInput> {
                   height: 50,
                   width: double.infinity,
                   child: FlatButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      addDataToHive();
+                    },
                     padding: EdgeInsets.all(0),
                     child: Ink(
                       decoration: BoxDecoration(
@@ -365,5 +337,21 @@ class _BankInputState extends State<BankInput> {
         ),
       ),
     );
+  }
+
+  void addDataToHive() {
+    BankModel bankModel = BankModel(
+      title: titleController.text,
+      bankName: bankNameController.text,
+      accountNumber: accountNumberController.text,
+      accountType: accountTypeController.text,
+      ifsc: ifscController.text,
+      branchName: branchNameController.text,
+      branchAddress: branchAddressController.text,
+      bankNumber: bankNumberController.text,
+      note: notesController.text
+    );
+    bankBox.add(bankModel);
+    Navigator.pop(context);
   }
 }

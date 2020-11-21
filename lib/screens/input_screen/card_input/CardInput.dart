@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/database/card_model.dart';
-import 'package:secret_keeper/main.dart';
+import 'package:secret_keeper/Database/Hive/CardModel.dart';
+import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class CardInput extends StatefulWidget {
   @override
@@ -9,9 +8,6 @@ class CardInput extends StatefulWidget {
 }
 
 class _CardInputState extends State<CardInput> {
-
-  //Reference of Box
-  //Box<CardModel> cardBox;
 
   bool _obscureTextCVV = true, _obscureTextPIN = true;
   int checkField;
@@ -24,13 +20,6 @@ class _CardInputState extends State<CardInput> {
   TextEditingController pinController = TextEditingController();
   TextEditingController notesController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   cardBox = Hive.box<CardModel>(CardBoxName);
-  // }
-
   void _toggleCVV() {
     setState(() {
       _obscureTextCVV = !_obscureTextCVV;
@@ -42,23 +31,6 @@ class _CardInputState extends State<CardInput> {
       _obscureTextPIN = !_obscureTextPIN;
     });
   }
-  //
-  // void addDataToHive(){
-  //   final String cardNameInput = cardNameController.text;
-  //   final String cardNumberInput = cardNumberController.text;
-  //   final String userNameInput = userNameController.text;
-  //   final String expirationInput = expirationController.text;
-  //   final String cvvInput = userNameController.text;
-  //   final String pinInput = pinController.text;
-  //   final String notesInput = notesController.text;
-  //
-  //   CardModel cardModel = CardModel(cardName: cardNameInput, cardNumber: cardNumberInput, userName: userNameInput,
-  //   expiration: expirationInput, cvv: cvvInput, pin: pinInput, note: notesInput);
-  //
-  //   cardBox.add(cardModel);
-  //
-  //   Navigator.pop(context);
-  // }
 
   Widget CardName() {
     return TextFormField(
@@ -300,7 +272,7 @@ class _CardInputState extends State<CardInput> {
                   width: double.infinity,
                   child: FlatButton(
                     onPressed: () {
-                      //addDataToHive();
+                      addDataToHive();
                     },
                     padding: EdgeInsets.all(0),
                     child: Ink(
@@ -342,5 +314,18 @@ class _CardInputState extends State<CardInput> {
         ),
       ),
     );
+  }
+  void addDataToHive() {
+    CardModel cardModel = CardModel(
+      cardName: cardNameController.text,
+      cardNumber: cardNumberController.text,
+      userName: userNameController.text,
+      expiration: expirationController.text,
+      cvv: cvvController.text,
+      pin: pinController.text,
+      note: notesController.text
+    );
+    cardBox.add(cardModel);
+    Navigator.pop(context);
   }
 }
