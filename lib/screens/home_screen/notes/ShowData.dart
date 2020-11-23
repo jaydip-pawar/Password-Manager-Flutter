@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/Database/Hive/NotesModel.dart';
 
-class NoteInput extends StatefulWidget {
+class ShowData extends StatefulWidget {
+  final int id;
+
+  const ShowData({Key key, this.id}) : super(key: key);
+
   @override
-  _NoteInputState createState() => _NoteInputState();
+  _ShowDataState createState() => _ShowDataState();
 }
 
-class _NoteInputState extends State<NoteInput> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+class _ShowDataState extends State<ShowData> {
 
   Widget Title() {
     return TextFormField(
@@ -65,10 +65,6 @@ class _NoteInputState extends State<NoteInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Add Notes"),
-      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
@@ -89,62 +85,11 @@ class _NoteInputState extends State<NoteInput> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: FlatButton(
-                    onPressed: () {
-                      addDataToHive();
-                    },
-                    padding: EdgeInsets.all(0),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color(0xffff5f6d),
-                            Color(0xffff5f6d),
-                            Color(0xffffc371),
-                          ],
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        constraints: BoxConstraints(
-                            maxWidth: double.infinity, minHeight: 50),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void addDataToHive() {
-    NotesModel notesModel = NotesModel(
-      title: titleController.text,
-      note: notesController.text
-    );
-    var notesBox = Hive.box<NotesModel>('notesBox');
-    notesBox.add(notesModel);
-    Navigator.pop(context);
   }
 }

@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/Database/Hive/BankModel.dart';
-import 'package:secret_keeper/screens/home_screen/Home.dart';
 
-class BankInput extends StatefulWidget {
+class ShowData extends StatefulWidget {
+  final int id;
+
+  const ShowData({Key key, this.id}) : super(key: key);
+
   @override
-  _BankInputState createState() => _BankInputState();
+  _ShowDataState createState() => _ShowDataState();
 }
 
-class _BankInputState extends State<BankInput> {
+class _ShowDataState extends State<ShowData> {
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController bankNameController = TextEditingController();
-  TextEditingController accountNumberController = TextEditingController();
-  TextEditingController accountTypeController = TextEditingController();
-  TextEditingController ifscController = TextEditingController();
-  TextEditingController branchNameController = TextEditingController();
-  TextEditingController branchAddressController = TextEditingController();
-  TextEditingController bankNumberController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+  bool _obscureTextCVV = true, _obscureTextPIN = true;
 
-  Widget Title() {
+  void _toggleCVV() {
+    setState(() {
+      _obscureTextCVV = !_obscureTextCVV;
+    });
+  }
+
+  void _togglePIN() {
+    setState(() {
+      _obscureTextPIN = !_obscureTextPIN;
+    });
+  }
+
+  Widget CardName() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
-        labelText: "Title",
+        labelText: "Custom Card Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -44,35 +49,11 @@ class _BankInputState extends State<BankInput> {
     );
   }
 
-  Widget BankName() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      decoration: InputDecoration(
-        labelText: "Bank Name",
-        labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.red,
-          ),
-        ),
-      ),
-      textInputAction: TextInputAction.next,
-    );
-  }
-
-  Widget AccountNumber() {
+  Widget CardNumber() {
     return TextFormField(
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        labelText: "Account Number",
+        labelText: "Card Number",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -91,12 +72,12 @@ class _BankInputState extends State<BankInput> {
     );
   }
 
-  Widget AccountType() {
+  Widget CardholderName() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
-        labelText: "Account Type",
+        labelText: "Cardholder Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -115,11 +96,14 @@ class _BankInputState extends State<BankInput> {
     );
   }
 
-  Widget IFSC() {
+  Widget Expiration() {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.datetime,
+      maxLength: 5,
       decoration: InputDecoration(
-        labelText: "IFSC",
+        labelText: "Expiration",
+        counterText: "",
+        hintText: "MM/DD",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -138,12 +122,14 @@ class _BankInputState extends State<BankInput> {
     );
   }
 
-  Widget BranchName() {
+  Widget CVV() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      keyboardType: TextInputType.datetime,
+      maxLength: 3,
+      obscureText: _obscureTextCVV,
       decoration: InputDecoration(
-        labelText: "Branch Name",
+        counterText: "",
+        labelText: "CVV",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -157,40 +143,24 @@ class _BankInputState extends State<BankInput> {
             color: Colors.red,
           ),
         ),
-      ),
-      textInputAction: TextInputAction.next,
-    );
-  }
-
-  Widget BranchAddress() {
-    return TextFormField(
-      keyboardType: TextInputType.streetAddress,
-      textCapitalization: TextCapitalization.words,
-      decoration: InputDecoration(
-        labelText: "Branch Address",
-        labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscureTextCVV ? Icons.visibility : Icons.visibility_off,
+            color: Colors.grey.shade600,
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.red,
-          ),
+          onPressed: _toggleCVV,
         ),
       ),
       textInputAction: TextInputAction.next,
     );
   }
 
-  Widget BankPhoneNumber() {
+  Widget Pin() {
     return TextFormField(
       keyboardType: TextInputType.number,
+      obscureText: _obscureTextPIN,
       decoration: InputDecoration(
-        labelText: "Bank Phone Number",
+        labelText: "Pin",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -203,6 +173,13 @@ class _BankInputState extends State<BankInput> {
           borderSide: BorderSide(
             color: Colors.red,
           ),
+        ),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscureTextPIN ? Icons.visibility : Icons.visibility_off,
+            color: Colors.grey.shade600,
+          ),
+          onPressed: _togglePIN,
         ),
       ),
       textInputAction: TextInputAction.next,
@@ -239,10 +216,6 @@ class _BankInputState extends State<BankInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Add Bank Details"),
-      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
@@ -255,80 +228,31 @@ class _BankInputState extends State<BankInput> {
                 SizedBox(
                   height: 15,
                 ),
-                Title(),
+                CardName(),
                 SizedBox(
                   height: 15,
                 ),
-                BankName(),
+                CardNumber(),
                 SizedBox(
                   height: 15,
                 ),
-                AccountNumber(),
+                CardholderName(),
                 SizedBox(
                   height: 15,
                 ),
-                AccountType(),
+                Expiration(),
                 SizedBox(
                   height: 15,
                 ),
-                IFSC(),
+                CVV(),
                 SizedBox(
                   height: 15,
                 ),
-                BranchName(),
-                SizedBox(
-                  height: 15,
-                ),
-                BranchAddress(),
-                SizedBox(
-                  height: 15,
-                ),
-                BankPhoneNumber(),
+                Pin(),
                 SizedBox(
                   height: 15,
                 ),
                 Note(),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: FlatButton(
-                    onPressed: () {
-                      addDataToHive();
-                    },
-                    padding: EdgeInsets.all(0),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color(0xffff5f6d),
-                            Color(0xffff5f6d),
-                            Color(0xffffc371),
-                          ],
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        constraints: BoxConstraints(
-                            maxWidth: double.infinity, minHeight: 50),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -338,22 +262,5 @@ class _BankInputState extends State<BankInput> {
         ),
       ),
     );
-  }
-
-  void addDataToHive() {
-    BankModel bankModel = BankModel(
-      title: titleController.text,
-      bankName: bankNameController.text,
-      accountNumber: accountNumberController.text,
-      accountType: accountTypeController.text,
-      ifsc: ifscController.text,
-      branchName: branchNameController.text,
-      branchAddress: branchAddressController.text,
-      bankNumber: bankNumberController.text,
-      note: notesController.text
-    );
-    var bankBox = Hive.box<BankModel>('bankBox');
-    bankBox.add(bankModel);
-    Navigator.pop(context);
   }
 }

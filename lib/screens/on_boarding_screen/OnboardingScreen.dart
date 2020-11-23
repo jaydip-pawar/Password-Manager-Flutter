@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:secret_keeper/screens/home_screen/Home.dart';
 import 'package:secret_keeper/screens/login_page/LoginPage.dart';
 import 'package:secret_keeper/screens/on_boarding_screen/data/data.dart';
 
@@ -109,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ): InkWell(
             onTap: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => LoginPage()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => Home()));
             },
             child: Container(
               height: Platform.isIOS ? 60 : 50,

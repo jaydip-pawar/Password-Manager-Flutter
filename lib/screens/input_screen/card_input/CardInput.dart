@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:secret_keeper/Database/Hive/CardModel.dart';
-import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class CardInput extends StatefulWidget {
   @override
@@ -315,6 +315,7 @@ class _CardInputState extends State<CardInput> {
       ),
     );
   }
+
   void addDataToHive() {
     CardModel cardModel = CardModel(
       cardName: cardNameController.text,
@@ -325,6 +326,7 @@ class _CardInputState extends State<CardInput> {
       pin: pinController.text,
       note: notesController.text
     );
+    var cardBox = Hive.box<CardModel>('cardBox');
     cardBox.add(cardModel);
     Navigator.pop(context);
   }

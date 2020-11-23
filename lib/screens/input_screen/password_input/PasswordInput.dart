@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:secret_keeper/Database/Hive/PasswordModel.dart';
-import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class PasswordInput extends StatefulWidget {
   @override
@@ -335,6 +335,7 @@ class _PasswordInputState extends State<PasswordInput> {
       password: passwordController.text,
       notes: notesController.text
     );
+    var passwordBox = Hive.box<PasswordModel>('passwordBox');
     passwordBox.add(passwordModel);
     Navigator.pop(context);
   }

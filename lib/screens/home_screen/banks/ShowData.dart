@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:secret_keeper/Database/Hive/BankModel.dart';
-import 'package:secret_keeper/screens/home_screen/Home.dart';
 
-class BankInput extends StatefulWidget {
+class ShowData extends StatefulWidget {
+  final int id;
+
+  const ShowData({Key key, this.id}) : super(key: key);
+
   @override
-  _BankInputState createState() => _BankInputState();
+  _ShowDataState createState() => _ShowDataState();
 }
 
-class _BankInputState extends State<BankInput> {
-
-  TextEditingController titleController = TextEditingController();
-  TextEditingController bankNameController = TextEditingController();
-  TextEditingController accountNumberController = TextEditingController();
-  TextEditingController accountTypeController = TextEditingController();
-  TextEditingController ifscController = TextEditingController();
-  TextEditingController branchNameController = TextEditingController();
-  TextEditingController branchAddressController = TextEditingController();
-  TextEditingController bankNumberController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+class _ShowDataState extends State<ShowData> {
 
   Widget Title() {
     return TextFormField(
@@ -239,10 +230,6 @@ class _BankInputState extends State<BankInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Add Bank Details"),
-      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
@@ -291,69 +278,11 @@ class _BankInputState extends State<BankInput> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: FlatButton(
-                    onPressed: () {
-                      addDataToHive();
-                    },
-                    padding: EdgeInsets.all(0),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color(0xffff5f6d),
-                            Color(0xffff5f6d),
-                            Color(0xffffc371),
-                          ],
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        constraints: BoxConstraints(
-                            maxWidth: double.infinity, minHeight: 50),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void addDataToHive() {
-    BankModel bankModel = BankModel(
-      title: titleController.text,
-      bankName: bankNameController.text,
-      accountNumber: accountNumberController.text,
-      accountType: accountTypeController.text,
-      ifsc: ifscController.text,
-      branchName: branchNameController.text,
-      branchAddress: branchAddressController.text,
-      bankNumber: bankNumberController.text,
-      note: notesController.text
-    );
-    var bankBox = Hive.box<BankModel>('bankBox');
-    bankBox.add(bankModel);
-    Navigator.pop(context);
   }
 }
