@@ -22,13 +22,14 @@ class PasswordModelAdapter extends TypeAdapter<PasswordModel> {
       userName: fields[2] as String,
       password: fields[3] as String,
       notes: fields[4] as String,
+      id: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PasswordModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.websiteName)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class PasswordModelAdapter extends TypeAdapter<PasswordModel> {
       ..writeByte(3)
       ..write(obj.password)
       ..writeByte(4)
-      ..write(obj.notes);
+      ..write(obj.notes)
+      ..writeByte(5)
+      ..write(obj.id);
   }
 
   @override

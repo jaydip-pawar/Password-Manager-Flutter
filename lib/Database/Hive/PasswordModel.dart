@@ -14,7 +14,9 @@ class PasswordModel {
   final String password;
   @HiveField(4)
   final String notes;
+  @HiveField(5)
+  final String id;
 
   PasswordModel(
-      {this.websiteName, this.websiteAddress, this.userName, this.password, this.notes});
+      {this.websiteName, this.websiteAddress, this.userName, this.password, this.notes, this.id});
 }

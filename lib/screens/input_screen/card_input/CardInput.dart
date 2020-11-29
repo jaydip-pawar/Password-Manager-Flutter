@@ -34,6 +34,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget CardName() {
     return TextFormField(
+      controller: cardNameController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -58,6 +59,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget CardNumber() {
     return TextFormField(
+      controller: cardNumberController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: "Card Number",
@@ -81,6 +83,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget CardholderName() {
     return TextFormField(
+      controller: userNameController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -105,6 +108,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget Expiration() {
     return TextFormField(
+      controller: expirationController,
       keyboardType: TextInputType.datetime,
       maxLength: 5,
       decoration: InputDecoration(
@@ -131,6 +135,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget CVV() {
     return TextFormField(
+      controller: cvvController,
       keyboardType: TextInputType.datetime,
       maxLength: 3,
       obscureText: _obscureTextCVV,
@@ -164,6 +169,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget Pin() {
     return TextFormField(
+      controller: pinController,
       keyboardType: TextInputType.number,
       obscureText: _obscureTextPIN,
       decoration: InputDecoration(
@@ -195,6 +201,7 @@ class _CardInputState extends State<CardInput> {
 
   Widget Note() {
     return TextFormField(
+      controller: notesController,
       keyboardType: TextInputType.multiline,
       maxLength: 250,
       textCapitalization: TextCapitalization.sentences,

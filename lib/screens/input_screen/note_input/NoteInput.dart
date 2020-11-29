@@ -13,6 +13,7 @@ class _NoteInputState extends State<NoteInput> {
 
   Widget Title() {
     return TextFormField(
+      controller: titleController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -37,6 +38,7 @@ class _NoteInputState extends State<NoteInput> {
 
   Widget Note() {
     return TextFormField(
+      controller: notesController,
       keyboardType: TextInputType.multiline,
       maxLength: 500,
       textCapitalization: TextCapitalization.sentences,
@@ -139,10 +141,8 @@ class _NoteInputState extends State<NoteInput> {
   }
 
   void addDataToHive() {
-    NotesModel notesModel = NotesModel(
-      title: titleController.text,
-      note: notesController.text
-    );
+    NotesModel notesModel =
+        NotesModel(title: titleController.text, note: notesController.text);
     var notesBox = Hive.box<NotesModel>('notesBox');
     notesBox.add(notesModel);
     Navigator.pop(context);

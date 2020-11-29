@@ -10,8 +10,16 @@ class BanksNavigation extends StatefulWidget {
 }
 
 class _BanksNavigationState extends State<BanksNavigation> {
-
   var bankBox = Hive.box<BankModel>('bankBox');
+  String _title,
+      _bName,
+      _aNumber,
+      _aType,
+      _ifsc,
+      _branchName,
+      _branchAddress,
+      _bNumber,
+      _note;
 
   @override
   Widget build(BuildContext context) {
@@ -26,38 +34,98 @@ class _BanksNavigationState extends State<BanksNavigation> {
     );
   }
 
-  Widget _buildListView() {
-    return WatchBoxBuilder(
-      box: bankBox,
-      builder: (context, box) {
-        Map<dynamic, dynamic> raw = box.toMap();
-        List list = raw.values.toList();
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            BankModel bankModel = list[index];
-            return ListTile(
-              title: Text(bankModel.bankName),
-              subtitle: Text(bankModel.accountNumber),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: (){
-                      bankBox.deleteAt(index);
-                    },
-                  )
-                ],
-              ),
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => ShowData(id: index,)));
-              },
-            );
-          },
-        );
+  Widget _buildListView() {
+    return ValueListenableBuilder(
+      valueListenable: bankBox.listenable(),
+      builder: (BuildContext context, Box<BankModel> box, _) {
+        if (box.isEmpty) {
+          return Text("No Data");
+        } else {
+          Map<dynamic, dynamic> raw = bankBox.toMap();
+          List list = raw.values.toList();
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              BankModel bankModel = list[index];
+              return Dismissible(
+                background: stackBehindDismiss(),
+                key: ObjectKey(list[index]),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  setState(() {
+                    _title = bankModel.title;
+                    _bName = bankModel.bankName;
+                    _aNumber = bankModel.accountNumber;
+                    _aType = bankModel.accountType;
+                    _ifsc = bankModel.ifsc;
+                    _branchName = bankModel.branchName;
+                    _branchAddress = bankModel.branchAddress;
+                    _bNumber = bankModel.bankNumber;
+                    _note = bankModel.note;
+                    bankBox.deleteAt(index);
+                  });
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("Entry deleted!"),
+                    action: SnackBarAction(
+                      label: "UNDO",
+                      textColor: Color(0xFFFFFFFF),
+                      onPressed: () {
+                        //To undo deletion
+                        undoDeletion(_title, _bName, _aNumber, _aType, _ifsc,
+                            _branchName, _branchAddress, _bNumber, _note);
+                      },
+                    ),
+                  ));
+                },
+                child: ListTile(
+                  title: Text(bankModel.bankName),
+                  subtitle: Text(bankModel.accountNumber),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ShowData(
+                          id: index,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  void undoDeletion(title, bName, aNumber, aType, ifsc, branchName,
+      branchAddress, bNumber, note) {
+    setState(
+      () {
+        BankModel bankModel = BankModel(
+            title: title,
+            bankName: bName,
+            accountNumber: aNumber,
+            accountType: aType,
+            ifsc: ifsc,
+            branchName: branchName,
+            branchAddress: branchAddress,
+            bankNumber: bNumber,
+            note: note);
+        bankBox.add(bankModel);
       },
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:secret_keeper/Database/Hive/BankModel.dart';
-import 'package:secret_keeper/screens/home_screen/Home.dart';
 
 class BankInput extends StatefulWidget {
   @override
@@ -22,6 +21,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget Title() {
     return TextFormField(
+      controller: titleController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -46,6 +46,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget BankName() {
     return TextFormField(
+      controller: bankNameController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -70,6 +71,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget AccountNumber() {
     return TextFormField(
+      controller: accountNumberController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: "Account Number",
@@ -93,6 +95,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget AccountType() {
     return TextFormField(
+      controller: accountTypeController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -117,6 +120,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget IFSC() {
     return TextFormField(
+      controller: ifscController,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "IFSC",
@@ -140,6 +144,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget BranchName() {
     return TextFormField(
+      controller: branchNameController,
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -164,6 +169,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget BranchAddress() {
     return TextFormField(
+      controller: branchAddressController,
       keyboardType: TextInputType.streetAddress,
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
@@ -188,6 +194,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget BankPhoneNumber() {
     return TextFormField(
+      controller: bankNumberController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: "Bank Phone Number",
@@ -211,6 +218,7 @@ class _BankInputState extends State<BankInput> {
 
   Widget Note() {
     return TextFormField(
+      controller: notesController,
       keyboardType: TextInputType.multiline,
       maxLength: 250,
       textCapitalization: TextCapitalization.sentences,

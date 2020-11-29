@@ -10,8 +10,8 @@ class NotesNavigation extends StatefulWidget {
 }
 
 class _NotesNavigationState extends State<NotesNavigation> {
-
   var notesBox = Hive.box<NotesModel>('notesBox');
+  String _title, _note;
 
   @override
   Widget build(BuildContext context) {
@@ -26,38 +26,78 @@ class _NotesNavigationState extends State<NotesNavigation> {
     );
   }
 
-  Widget _buildListView() {
-    return WatchBoxBuilder(
-      box: notesBox,
-      builder: (context, box) {
-        Map<dynamic, dynamic> raw = box.toMap();
-        List list = raw.values.toList();
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            NotesModel notesModel = list[index];
-            return ListTile(
-              title: Text(notesModel.title),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: (){
-                      notesBox.deleteAt(index);
-                    },
-                  )
-                ],
-              ),
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => ShowData(id: index,)));
-              },
-            );
-          },
-        );
+  Widget _buildListView() {
+    return ValueListenableBuilder(
+      valueListenable: notesBox.listenable(),
+      builder: (BuildContext context, Box<NotesModel> box, _) {
+        if (box.isEmpty) {
+          return Text("No Data");
+        } else {
+          Map<dynamic, dynamic> raw = notesBox.toMap();
+          List list = raw.values.toList();
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              NotesModel notesModel = list[index];
+              return Dismissible(
+                background: stackBehindDismiss(),
+                key: ObjectKey(list[index]),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  setState(() {
+                    _title = notesModel.title;
+                    _note = notesModel.note;
+                    notesBox.deleteAt(index);
+                  });
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("Entry deleted!"),
+                    action: SnackBarAction(
+                      label: "UNDO",
+                      textColor: Color(0xFFFFFFFF),
+                      onPressed: () {
+                        //To undo deletion
+                        undoDeletion(_title, _note);
+                      },
+                    ),
+                  ));
+                },
+                child: ListTile(
+                  title: Text(notesModel.title),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ShowData(
+                          id: index,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        }
       },
     );
+  }
+
+  void undoDeletion(title, note) {
+    setState(() {
+      NotesModel notesModel = NotesModel(title: title, note: note);
+      notesBox.add(notesModel);
+    });
   }
 }

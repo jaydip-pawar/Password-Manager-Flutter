@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:secret_keeper/Database/Hive/CardModel.dart';
 
 class ShowData extends StatefulWidget {
   final int id;
@@ -10,8 +12,33 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
-
   bool _obscureTextCVV = true, _obscureTextPIN = true;
+
+  TextEditingController cardNameController = TextEditingController();
+  TextEditingController cardNumberController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController expirationController = TextEditingController();
+  TextEditingController cvvController = TextEditingController();
+  TextEditingController pinController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+
+  var cardBox = Hive.box<CardModel>('cardBox');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Map<dynamic, dynamic> raw = cardBox.toMap();
+    List list = raw.values.toList();
+    CardModel cardModel = list[widget.id];
+    cardNameController = TextEditingController(text: cardModel.cardName);
+    cardNumberController = TextEditingController(text: cardModel.cardNumber);
+    userNameController = TextEditingController(text: cardModel.userName);
+    expirationController = TextEditingController(text: cardModel.expiration);
+    cvvController = TextEditingController(text: cardModel.cvv);
+    pinController = TextEditingController(text: cardModel.pin);
+    notesController = TextEditingController(text: cardModel.note);
+  }
 
   void _toggleCVV() {
     setState(() {
@@ -27,8 +54,8 @@ class _ShowDataState extends State<ShowData> {
 
   Widget CardName() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: cardNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Custom Card Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -41,17 +68,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget CardNumber() {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      controller: cardNumberController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Card Number",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -64,18 +91,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget CardholderName() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: userNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Cardholder Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -88,22 +114,20 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Expiration() {
     return TextFormField(
-      keyboardType: TextInputType.datetime,
-      maxLength: 5,
+      controller: expirationController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Expiration",
         counterText: "",
-        hintText: "MM/DD",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -114,18 +138,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget CVV() {
     return TextFormField(
-      keyboardType: TextInputType.datetime,
-      maxLength: 3,
+      controller: cvvController,
+      readOnly: true,
       obscureText: _obscureTextCVV,
       decoration: InputDecoration(
         counterText: "",
@@ -140,7 +163,7 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
         suffixIcon: IconButton(
@@ -151,14 +174,14 @@ class _ShowDataState extends State<ShowData> {
           onPressed: _toggleCVV,
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Pin() {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      controller: pinController,
       obscureText: _obscureTextPIN,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Pin",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -171,7 +194,7 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
         suffixIcon: IconButton(
@@ -182,18 +205,14 @@ class _ShowDataState extends State<ShowData> {
           onPressed: _togglePIN,
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Note() {
     return TextFormField(
-      keyboardType: TextInputType.multiline,
-      maxLength: 250,
-      textCapitalization: TextCapitalization.sentences,
-      maxLines: null,
+      controller: notesController,
+      readOnly: true,
       decoration: InputDecoration(
-        counterText: "",
         labelText: "Note",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
@@ -205,24 +224,26 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.newline,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Card Details"),
+      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
           child: Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(

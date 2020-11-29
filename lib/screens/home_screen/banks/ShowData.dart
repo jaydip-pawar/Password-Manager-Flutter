@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:secret_keeper/Database/Hive/BankModel.dart';
 
 class ShowData extends StatefulWidget {
   final int id;
@@ -11,10 +13,40 @@ class ShowData extends StatefulWidget {
 
 class _ShowDataState extends State<ShowData> {
 
+  TextEditingController titleController = TextEditingController();
+  TextEditingController bankNameController = TextEditingController();
+  TextEditingController accountNumberController = TextEditingController();
+  TextEditingController accountTypeController = TextEditingController();
+  TextEditingController ifscController = TextEditingController();
+  TextEditingController branchNameController = TextEditingController();
+  TextEditingController branchAddressController = TextEditingController();
+  TextEditingController bankNumberController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+
+  var bankBox = Hive.box<BankModel>('bankBox');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Map<dynamic, dynamic> raw = bankBox.toMap();
+    List list = raw.values.toList();
+    BankModel bankModel = list[widget.id];
+    titleController = TextEditingController(text: bankModel.title);
+    bankNameController = TextEditingController(text: bankModel.bankName);
+    accountNumberController = TextEditingController(text: bankModel.accountNumber);
+    accountTypeController = TextEditingController(text: bankModel.accountType);
+    ifscController = TextEditingController(text: bankModel.ifsc);
+    branchNameController = TextEditingController(text: bankModel.branchName);
+    branchAddressController = TextEditingController(text: bankModel.branchAddress);
+    bankNumberController = TextEditingController(text: bankModel.bankNumber);
+    notesController = TextEditingController(text: bankModel.note);
+  }
+
   Widget Title() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: titleController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Title",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -27,18 +59,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget BankName() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: bankNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Bank Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -51,17 +82,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget AccountNumber() {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      controller: accountNumberController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Account Number",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -74,18 +105,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget AccountType() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: accountTypeController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Account Type",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -98,17 +128,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget IFSC() {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      controller: ifscController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "IFSC",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -121,18 +151,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget BranchName() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: branchNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Branch Name",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -145,18 +174,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget BranchAddress() {
     return TextFormField(
-      keyboardType: TextInputType.streetAddress,
-      textCapitalization: TextCapitalization.words,
+        controller: branchAddressController,
+        readOnly: true,
       decoration: InputDecoration(
         labelText: "Branch Address",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -169,17 +197,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget BankPhoneNumber() {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      controller: bankNumberController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Bank Phone Number",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -192,22 +220,18 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Note() {
     return TextFormField(
-      keyboardType: TextInputType.multiline,
-      maxLength: 250,
-      textCapitalization: TextCapitalization.sentences,
-      maxLines: null,
+      controller: notesController,
+      readOnly: true,
       decoration: InputDecoration(
-        counterText: "",
         labelText: "Note",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
@@ -219,24 +243,26 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.newline,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Bank Details"),
+      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
           child: Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(

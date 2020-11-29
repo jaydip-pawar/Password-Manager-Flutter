@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:secret_keeper/Database/Hive/PasswordModel.dart';
+import 'package:uuid/uuid.dart';
 
 class PasswordInput extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class PasswordInput extends StatefulWidget {
 }
 
 class _PasswordInputState extends State<PasswordInput> {
-
   bool _obscureText = true;
   int generatePasswordHelper = 0;
   String _passwordStrength = "Hello";
@@ -211,19 +211,18 @@ class _PasswordInputState extends State<PasswordInput> {
             ],
           ),
           Slider(
-            value: _currentRangeValues.toDouble(),
-            min: 0,
-            max: 100,
-            divisions: 27,
-            onChanged: (double newValue) {
-              setState(() {
-                _currentRangeValues = newValue.round();
-              });
-            },
-            semanticFormatterCallback: (double newValue) {
-              return '${newValue.round()} dollars';
-            }
-          )
+              value: _currentRangeValues.toDouble(),
+              min: 0,
+              max: 100,
+              divisions: 27,
+              onChanged: (double newValue) {
+                setState(() {
+                  _currentRangeValues = newValue.round();
+                });
+              },
+              semanticFormatterCallback: (double newValue) {
+                return '${newValue.round()} dollars';
+              })
         ],
       ),
     );
@@ -232,7 +231,6 @@ class _PasswordInputState extends State<PasswordInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text("Add Password"),
@@ -243,7 +241,6 @@ class _PasswordInputState extends State<PasswordInput> {
           child: Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
@@ -328,15 +325,17 @@ class _PasswordInputState extends State<PasswordInput> {
   }
 
   void addDataToHive() {
+    var uuid = Uuid();
     PasswordModel passwordModel = PasswordModel(
-      websiteName: websiteNameController.text,
-      websiteAddress: websiteAddressController.text,
-      userName: userNameController.text,
-      password: passwordController.text,
-      notes: notesController.text
+        websiteName: websiteNameController.text,
+        websiteAddress: websiteAddressController.text,
+        userName: userNameController.text,
+        password: passwordController.text,
+        notes: notesController.text,
+        id: uuid.v4().toString()
     );
     var passwordBox = Hive.box<PasswordModel>('passwordBox');
-    passwordBox.add(passwordModel);
+    passwordBox.put(passwordModel.id, passwordModel);
     Navigator.pop(context);
   }
 }

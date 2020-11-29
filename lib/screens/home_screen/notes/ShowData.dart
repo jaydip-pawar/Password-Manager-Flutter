@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:secret_keeper/Database/Hive/NotesModel.dart';
 
 class ShowData extends StatefulWidget {
   final int id;
@@ -10,11 +12,26 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+
+  var notesBox = Hive.box<NotesModel>('notesBox');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Map<dynamic, dynamic> raw = notesBox.toMap();
+    List list = raw.values.toList();
+    NotesModel notesModel = list[widget.id];
+    titleController = TextEditingController(text: notesModel.title);
+    notesController = TextEditingController(text: notesModel.note);
+  }
 
   Widget Title() {
     return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      controller: titleController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Title of note",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -27,22 +44,18 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Note() {
     return TextFormField(
-      keyboardType: TextInputType.multiline,
-      maxLength: 500,
-      textCapitalization: TextCapitalization.sentences,
-      maxLines: 15,
+      controller: notesController,
+      readOnly: true,
       decoration: InputDecoration(
-        counterText: "",
         labelText: "Note",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
@@ -54,24 +67,26 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.newline,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Notes"),
+      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(),
           child: Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(

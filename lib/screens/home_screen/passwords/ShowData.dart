@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:secret_keeper/Database/Hive/PasswordModel.dart';
 
 class ShowData extends StatefulWidget {
   final int id;
@@ -9,8 +11,31 @@ class ShowData extends StatefulWidget {
 }
 
 class _ShowDataState extends State<ShowData> {
-
   bool _obscureText = true;
+
+  TextEditingController websiteNameController = TextEditingController();
+  TextEditingController websiteAddressController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+
+  var passwordBox = Hive.box<PasswordModel>('passwordBox');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Map<dynamic, dynamic> raw = passwordBox.toMap();
+    List list = raw.values.toList();
+    PasswordModel passwordModel = list[widget.id];
+    websiteNameController =
+        TextEditingController(text: passwordModel.websiteName);
+    websiteAddressController =
+        TextEditingController(text: passwordModel.websiteAddress);
+    userNameController = TextEditingController(text: passwordModel.userName);
+    passwordController = TextEditingController(text: passwordModel.password);
+    notesController = TextEditingController(text: passwordModel.notes);
+  }
 
   void _toggle() {
     setState(() {
@@ -20,8 +45,8 @@ class _ShowDataState extends State<ShowData> {
 
   Widget WebsiteName() {
     return TextFormField(
-      textCapitalization: TextCapitalization.words,
-      keyboardType: TextInputType.text,
+      controller: websiteNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Name of website",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -34,17 +59,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget WebsiteAddress() {
     return TextFormField(
-      keyboardType: TextInputType.url,
+      controller: websiteAddressController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Website address",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -57,17 +82,17 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget UserName() {
     return TextFormField(
-      keyboardType: TextInputType.emailAddress,
+      controller: userNameController,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Username / Email",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -80,18 +105,18 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Password() {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      controller: passwordController,
       obscureText: _obscureText,
+      readOnly: true,
       decoration: InputDecoration(
         labelText: "Password",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
@@ -104,7 +129,7 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
         suffixIcon: IconButton(
@@ -115,18 +140,14 @@ class _ShowDataState extends State<ShowData> {
           onPressed: _toggle,
         ),
       ),
-      textInputAction: TextInputAction.next,
     );
   }
 
   Widget Note() {
     return TextFormField(
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      maxLength: 250,
-      maxLines: null,
+      controller: notesController,
+      readOnly: true,
       decoration: InputDecoration(
-        counterText: "",
         labelText: "Note",
         labelStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
         enabledBorder: OutlineInputBorder(
@@ -138,11 +159,10 @@ class _ShowDataState extends State<ShowData> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.red,
+            color: Colors.grey.shade300,
           ),
         ),
       ),
-      textInputAction: TextInputAction.newline,
     );
   }
 
@@ -151,7 +171,7 @@ class _ShowDataState extends State<ShowData> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Show Password"),
+        title: Text("Passwords"),
       ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
