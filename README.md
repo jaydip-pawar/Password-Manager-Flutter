@@ -1,6 +1,6 @@
 # secret_keeper
 
-This app is used to store your secrete passwords, bank details and much more..
+This app is used to store your secret password, bank details and much more..
 
 ## Getting Started
 
